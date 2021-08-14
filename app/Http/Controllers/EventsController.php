@@ -181,6 +181,21 @@ class EventsController extends BaseController
      */
 
     public function getFutureEventsWithWorkshops() {
-        throw new \Exception('implement in coding task 2');
+        $events = Event::all();
+        $futureEvents = array();
+        foreach ($events as $key => $event) {
+            $checkevent = $event->workshops()->where('start','>=',date('Y-m-d H:i:s'))->exists();
+            if($checkevent){
+                
+                $event['workshops'] = $event->workshops()->where('start','>=',date('Y-m-d H:i:s'))->get();
+                $futureEvents[] = $event;
+            }
+        }
+        return json_encode($futureEvents);
+    }
+
+    public function getWarmupEventsWithWorkshops(){
+        $warmpupevents = Event::select('name')->get();
+        return json_encode($warmpupevents);
     }
 }
